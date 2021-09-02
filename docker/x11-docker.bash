@@ -16,5 +16,6 @@ docker run --rm -it --name ssdf-devel \
 	--volume $XSOCK:$XSOCK --volume $XAUTH:$XAUTH \
 	--env TERM=xterm-256color \
 	--volume $SCRIPT_DIR/workspace:/home/ssdf/workspace \
+	--workdir /home/ssdf/workspace \
 	--volume $SCRIPT_DIR/.vscode-server:/home/ssdf/.vscode-server \
 	$1

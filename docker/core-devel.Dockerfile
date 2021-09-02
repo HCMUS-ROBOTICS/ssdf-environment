@@ -52,12 +52,12 @@ RUN apt-get update &&\
     chmod 0440 /etc/sudoers.d/$USERNAME &&\
     rm -rf /var/lib/apt/lists/*
 
-# ROS core + Colcon + CMake deprecated warning workaround
+# ROS core + catkin_tools + CMake deprecated warning workaround
 RUN echo 'deb http://packages.ros.org/ros/ubuntu focal main' | tee /etc/apt/sources.list.d/ros-latest.list &&\
     curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc -o /etc/apt/trusted.gpg.d/ros.asc &&\
     apt-get update &&\
     apt-get install -y --no-install-recommends ros-noetic-ros-core &&\
-    python3 -m pip install --no-cache-dir --upgrade colcon-common-extensions &&\
+    python3 -m pip install --no-cache-dir --upgrade catkin_tools &&\
     grep -rl cmake_minimum_required /usr/src/googletest |\
     xargs sed -i "s/cmake_minimum_required([^)]*)/cmake_minimum_required(VERSION 3.18)/g" &&\
     rm -rf /var/lib/apt/lists/*
@@ -65,7 +65,7 @@ RUN echo 'deb http://packages.ros.org/ros/ubuntu focal main' | tee /etc/apt/sour
 # ROS packages
 RUN apt-get update &&\
     apt-get install -y --no-install-recommends netbase ros-noetic-rosbridge-server &&\
-    python3 -m pip install --no-cache-dir --upgrade eventlet python-socketio &&\
+    python3 -m pip install --no-cache-dir --upgrade eventlet python-socketio==4.* &&\
     rm -rf /var/lib/apt/lists/*
 
 # Formatter + linter
