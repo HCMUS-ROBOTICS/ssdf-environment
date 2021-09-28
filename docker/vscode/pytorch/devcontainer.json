@@ -1,0 +1,25 @@
+{
+	"name": "PyTorch",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"settings": {
+		"editor.formatOnSave": true,
+		"python.terminal.activateEnvironment": false,
+		"editor.suggestSelection": "first",
+		"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
+	},
+	"extensions": [
+		"ms-python.python",
+		"kevinglasson.cornflakes-linter",
+		"VisualStudioExptTeam.vscodeintellicode"
+	],
+	"runArgs": [
+		"--gpus=all",
+		"--device=/dev/nvidia0",
+		"--device=/dev/nvidiactl",
+		"--device=/dev/nvidia-uvm",
+		"--device=/dev/nvidia-uvm-tools"
+	],
+	"remoteUser": "micromamba"
+}
