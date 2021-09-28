@@ -1,0 +1,36 @@
+name: Update SSDF dotfiles
+on:
+  push:
+    branches:
+      - main
+    paths: 
+      - dotfiles/**
+jobs:
+  update-dotfiles:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo:
+          - ssdf-nncore
+          - ssdf-perception
+          - ssdf-toolbox
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: HCMUS-ROBOTICS/${{ matrix.repo }}
+          path: ${{ matrix.repo }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          path: ssdf-environment
+      - run: cp -r ssdf-environment/dotfiles/. ${{ matrix.repo }}
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          path: ${{ matrix.repo }}
+          token: ${{ secrets.PAT }}
+          title: Update dotfiles
+          commit-message: ${{ github.event.commits[0].message }}
+          delete-branch: true
+          team-reviewers: |
+            owners
+            maintainers
