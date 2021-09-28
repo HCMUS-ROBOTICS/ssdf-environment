@@ -9,7 +9,7 @@ RUN micromamba install -y -n base -c main \
     micromamba clean -y --all
 
 RUN micromamba install -y -n base -c conda-forge \
-    autopep8 clang-format pre-commit &&\
+    autopep8 clang-format flake8 pre-commit &&\
     micromamba clean -y --all
 
 RUN micromamba shell init -s bash -p $MAMBA_ROOT_PREFIX &&\
