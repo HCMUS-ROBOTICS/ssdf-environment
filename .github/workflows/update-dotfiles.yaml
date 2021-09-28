@@ -13,7 +13,6 @@ jobs:
         repo:
           - ssdf-nncore
           - ssdf-perception
-          - ssdf-toolbox
     steps:
       - uses: actions/checkout@v2
         with:
@@ -29,7 +28,7 @@ jobs:
           path: ${{ matrix.repo }}
           token: ${{ secrets.PAT }}
           title: Update dotfiles
-          commit-message: ${{ github.event.commits[0].message }}
+          commit-message: ${{ github.event.head_commit.message }}
           delete-branch: true
           team-reviewers: |
             owners

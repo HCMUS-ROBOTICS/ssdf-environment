@@ -118,8 +118,3 @@ RUN apt-get update &&\
     apt-get install -y --no-install-recommends netbase ros-noetic-rosbridge-server &&\
     python3 -m pip install --no-cache-dir --upgrade python-socketio &&\
     rm -rf /var/lib/apt/lists/*
-
-# # Formatter + linter
-# RUN python3 -m pip install --no-cache-dir --upgrade \
-#     add-trailing-comma autopep8 clang-format cmake-format pre-commit isort \
-#     flake8 flake8-bugbear flake8-builtins flake8-comprehensions flake8-isort flake8-docstrings pep8-naming
