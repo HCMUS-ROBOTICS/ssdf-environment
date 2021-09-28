@@ -1,0 +1,39 @@
+{
+	"name": "ssdf:core-devel",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"containerEnv": {
+		"DISPLAY": "${localEnv:DISPLAY}",
+		"XAUTHORITY": "/tmp/.docker.xauth"
+	},
+	"extensions": [
+		"ms-vscode.cpptools",
+		"twxs.cmake",
+		"kevinglasson.cornflakes-linter",
+		"ms-python.python",
+		"redhat.vscode-yaml",
+		"DotJoshJohnson.xml"
+	],
+	"forwardPorts": [
+		4567,
+		8888,
+		9090
+	],
+	"initializeCommand": "touch /tmp/.docker.xauth && xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge -",
+	"mounts": [
+		"source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+		"source=/tmp/.docker.xauth,target=/tmp/.docker.xauth,type=bind"
+	],
+	"settings": {
+		"editor.formatOnSave": true
+	},
+	"runArgs": [
+		"--gpus=all",
+		"--device=/dev/nvidia0",
+		"--device=/dev/nvidiactl",
+		"--device=/dev/nvidia-uvm",
+		"--device=/dev/nvidia-uvm-tools"
+	],
+	"remoteUser": "ssdf"
+}
