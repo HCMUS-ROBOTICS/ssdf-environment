@@ -15,8 +15,8 @@ ARG VID_CODEC_VER
 ARG FFMPEG_VER
 ENV PKG_CONFIG_PATH /usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
 RUN --mount=target=/tmp/VideoCodec,source=Video_Codec_SDK \
-    cp -r /tmp/VideoCodec/Interface /usr/local/cuda/include &&\
-    cp -r /tmp/VideoCodec/Lib/linux/stubs/x86_64 /usr/local/cuda/lib64/stubs &&\
+    cp -r /tmp/VideoCodec/Interface/* /usr/local/cuda/include &&\
+    cp -r /tmp/VideoCodec/Lib/linux/stubs/x86_64/* /usr/local/cuda/lib64/stubs &&\
     apt-get update && \
     apt-get install -y --no-install-recommends \
     nasm pkg-config libnuma-dev \
@@ -35,7 +35,7 @@ RUN --mount=target=/tmp/VideoCodec,source=Video_Codec_SDK \
     apt-get autoremove -y --purge \
     nasm pkg-config libnuma-dev \
     libx264-dev libx265-dev libvpx-dev &&\
-    rm -rf ../FFmpeg-n4.4 /var/lib/apt/lists/*
+    rm -rf ../FFmpeg-n$FFMPEG_VER /var/lib/apt/lists/*
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:$LIBRARY_PATH
 
 # TensorRT
@@ -82,6 +82,8 @@ RUN curl -fsSL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-P
     echo 'source /opt/intel/compilers_and_libraries_2020.4.304/linux/bin/compilervars.sh intel64' >> /home/$USERNAME/.bashrc &&\
     rm -rf ../build ../opencv* /var/lib/apt/lists/*
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 # ROS core + catkin_tools + CMake deprecated warning workaround
 RUN echo 'deb http://packages.ros.org/ros/ubuntu focal main' | tee /etc/apt/sources.list.d/ros-latest.list &&\
     curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc -o /etc/apt/trusted.gpg.d/ros.asc &&\
@@ -117,10 +119,7 @@ RUN apt-get update &&\
     python3 -m pip install --no-cache-dir --upgrade python-socketio &&\
     rm -rf /var/lib/apt/lists/*
 
-# Formatter + linter
-RUN python3 -m pip install --no-cache-dir --upgrade \
-    add-trailing-comma autopep8 clang-format cmake-format pre-commit isort \
-    flake8 flake8-bugbear flake8-builtins flake8-comprehensions flake8-isort flake8-docstrings pep8-naming
-
-USER $USERNAME
-WORKDIR /home/$USERNAME
+# # Formatter + linter
+# RUN python3 -m pip install --no-cache-dir --upgrade \
+#     add-trailing-comma autopep8 clang-format cmake-format pre-commit isort \
+#     flake8 flake8-bugbear flake8-builtins flake8-comprehensions flake8-isort flake8-docstrings pep8-naming
