@@ -13,6 +13,7 @@ jobs:
         repo:
           - ssdf-nncore
           - ssdf-perception
+          - ssdf-sim-adapter
     steps:
       - uses: actions/checkout@v2
         with:
