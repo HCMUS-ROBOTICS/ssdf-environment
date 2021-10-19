@@ -53,19 +53,16 @@ RUN curl -fsSLO https://github.com/Kitware/CMake/releases/latest/download/cmake-
     python3 -m pip install --no-cache-dir --upgrade pip &&\
     python3 -m pip install --no-cache-dir --upgrade numpy setuptools &&\
     curl -fsSL https://github.com/opencv/opencv/archive/$OPENCV_VER.tar.gz | tar xz &&\
-    curl -fsSL https://github.com/opencv/opencv_contrib/archive/$OPENCV_VER.tar.gz | tar xz &&\
     source /opt/intel/compilers_and_libraries_2020.4.304/linux/bin/compilervars.sh intel64 &&\
     cmake opencv-$OPENCV_VER -B build -DCMAKE_BUILD_TYPE=Release \
-    -DOPENCV_EXTRA_MODULES_PATH=opencv_contrib-$OPENCV_VER/modules \
-    -DBUILD_LIST=cudaarithm,cudafilters,cudaimgproc,cudev,imgproc,imgcodecs,highgui,python3,videoio \
-    -DWITH_CUDA=ON -DWITH_CUDNN=ON -DCUDA_ARCH_BIN="6.0;6.1;7.0;7.5;8.0;8.6" \
+    -DBUILD_LIST=imgproc,imgcodecs,highgui,python3,videoio \
     -DCPU_BASELINE=AVX2 -DOPENCV_ENABLE_NONFREE=ON -DWITH_ADE=OFF -DWITH_PROTOBUF=OFF \
     -DWITH_OPENEXR=OFF -DWITH_IMGCODEC_SUNRASTER=OFF -DWITH_IMGCODEC_PXM=OFF -DWITH_IMGCODEC_PFM=OFF &&\
     make --directory build --jobs $(nproc) install &&\
     apt-get autoremove -y --purge \
     intel-mkl-tbb-rt-2020.4-304 libgtk-3-dev python3-dev &&\
     echo 'source /opt/intel/compilers_and_libraries_2020.4.304/linux/bin/compilervars.sh intel64' >> /home/$USERNAME/.bashrc &&\
-    rm -rf build opencv-$OPENCV_VER opencv_contrib-$OPENCV_VER /var/lib/apt/lists/*
+    rm -rf build opencv-$OPENCV_VER /var/lib/apt/lists/*
 
 # TensorRT
 RUN apt-get update &&\
@@ -93,17 +90,18 @@ RUN echo 'deb http://packages.ros.org/ros/ubuntu focal main' | tee /etc/apt/sour
 ARG VISION_CV_VER
 ARG IMG_TRANSPORT_PLUGIN_VER
 RUN apt-get update &&\
-    apt-get install -y --no-install-recommends ros-noetic-image-transport &&\
+    apt-get install -y --no-install-recommends \
+    libtheora-dev ros-noetic-image-transport &&\
     source /opt/ros/noetic/setup.bash &&\
     mkdir -p /opt/ros/no_version/src && cd /opt/ros/no_version &&\
     curl -fsSL https://github.com/ros-perception/vision_opencv/archive/$VISION_CV_VER.tar.gz |\
     tar xzC src --strip-components 1 vision_opencv-$VISION_CV_VER/cv_bridge &&\
     curl -fsSL https://github.com/ros-perception/image_transport_plugins/archive/$IMG_TRANSPORT_PLUGIN_VER.tar.gz |\
-    tar xzC src --strip-components 1 image_transport_plugins-$IMG_TRANSPORT_PLUGIN_VER/compressed_image_transport &&\
+    tar xzC src --strip-components 1 image_transport_plugins-$IMG_TRANSPORT_PLUGIN_VER/{compressed_image_transport,theora_image_transport} &&\
     catkin config --init --install --link-devel && catkin build &&\
     echo 'source /opt/ros/no_version/install/setup.bash --extend' >> /home/$USERNAME/.bashrc &&\
-    apt-mark manual libogg0 libtheora0 &&\
-    apt autoremove -y --purge libogg-dev libtheora-dev &&\
+    apt-mark manual libtheora0 &&\
+    apt autoremove -y --purge libtheora-dev &&\
     rm -rf devel logs src /var/lib/apt/lists/*
 
 # Libraries for SSDF
