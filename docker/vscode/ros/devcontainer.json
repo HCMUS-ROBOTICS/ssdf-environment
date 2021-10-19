@@ -1,17 +1,22 @@
 {
-	"name": "ssdf:core-devel",
+	"name": "SSDF development environment",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		"args": {
+			"SSDF_BASE_IMAGE": "kerry347/ssdf:gui-devel"
+		}
 	},
 	"containerEnv": {
 		"DISPLAY": "${localEnv:DISPLAY}",
+		"ROSCONSOLE_FORMAT": "[${severity}] [${node}]: ${message}",
 		"XAUTHORITY": "/tmp/.docker.xauth"
 	},
 	"extensions": [
-		"ms-vscode.cpptools",
 		"twxs.cmake",
+		"cheshirekow.cmake-format",
 		"kevinglasson.cornflakes-linter",
-		"ms-python.python",
+		"VisualStudioExptTeam.vscodeintellicode",
+		"ms-iot.vscode-ros",
 		"redhat.vscode-yaml",
 		"DotJoshJohnson.xml"
 	],
@@ -26,7 +31,13 @@
 		"source=/tmp/.docker.xauth,target=/tmp/.docker.xauth,type=bind"
 	],
 	"settings": {
-		"editor.formatOnSave": true
+		"editor.formatOnSave": true,
+		"search.exclude": {
+			"**/build": true,
+			"**/logs": true
+		},
+		"editor.suggestSelection": "first",
+		"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
 	},
 	"runArgs": [
 		"--gpus=all",
